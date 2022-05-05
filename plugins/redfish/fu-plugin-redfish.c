@@ -19,7 +19,7 @@
 #include "fu-redfish-smbios.h"
 
 #define FU_REDFISH_PLUGIN_CLEANUP_RETRIES_COUNT 120
-#define FU_REDFISH_PLUGIN_CLEANUP_RETRIES_DELAY 5000 /* ms */
+#define FU_REDFISH_PLUGIN_CLEANUP_RETRIES_DELAY 10000 /* ms */
 
 struct FuPluginData {
 	FuRedfishBackend *backend;
