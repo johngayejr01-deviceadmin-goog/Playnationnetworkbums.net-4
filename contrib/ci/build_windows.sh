@@ -25,6 +25,8 @@ rm -rf $DESTDIR $build
 #build
 mkdir -p $build $DESTDIR && cd $build
 python3 -m pip install --user "meson >= 0.60.0"
+
+# try to keep this and ../contrib/build-windows.sh in sync as much as makes sense
 meson .. \
     --cross-file=/usr/share/mingw/toolchain-mingw64.meson \
     --prefix=/ \
@@ -60,12 +62,12 @@ VERSION=$(meson introspect . --projectinfo | jq -r .version)
 
 # run tests
 export WINEPATH="/usr/x86_64-w64-mingw32/sys-root/mingw/bin/;$build/libfwupd/;$build/libfwupdplugin/;$build/subprojects/libxmlb/src/;$build/subprojects/gcab/libgcab/;$build/subprojects/libjcat/libjcat/;$build/subprojects/gusb/gusb/"
-ninja -C $build -v
-ninja -C $build test
+ninja -C "$build" -v
+ninja -C "$build" test
 
 # switch to release optimisations
 meson configure -Dtests=false -Dbuildtype=release
-ninja -C $build -v install
+ninja -C "$build" -v install
 
 #generate news release
 cd $root
@@ -91,21 +93,20 @@ find $MINGW32BINDIR \
 	-o -name libbz2-1.dll \
 	-o -name libcrypto-1_1-x64.dll \
 	-o -name libcurl-4.dll \
-	-o -name libffi-*.dll \
+	-o -name "libffi-*.dll" \
 	-o -name libgcc_s_seh-1.dll \
 	-o -name libgio-2.0-0.dll \
 	-o -name libglib-2.0-0.dll \
 	-o -name libgmodule-2.0-0.dll \
 	-o -name libgmp-10.dll \
 	-o -name libgnutls-30.dll \
-	-o -name libgnutls-30.dll \
 	-o -name libgobject-2.0-0.dll \
-	-o -name libhogweed-*.dll \
+	-o -name "libhogweed-*.dll" \
 	-o -name libidn2-0.dll \
 	-o -name libintl-8.dll \
 	-o -name libjson-glib-1.0-0.dll \
 	-o -name liblzma-5.dll \
-	-o -name libnettle-*.dll \
+	-o -name "libnettle-*.dll" \
 	-o -name libp11-kit-0.dll \
 	-o -name libpcre-1.dll \
 	-o -name libsqlite3-0.dll \
@@ -130,12 +131,12 @@ echo $CERTDIR/ca-bundle.crt | wixl-heat \
 	--directory-ref BINDIR \
 	--var "var.CRTDIR" \
 	--component-group "CG.fwupd-certs" | \
-	tee $build/contrib/fwupd-certs.wxs
+	tee "$build/contrib/fwupd-certs.wxs"
 
 # our files
-find $DESTDIR | \
+find "$DESTDIR" | \
 	wixl-heat \
-	-p $DESTDIR/ \
+	-p "$DESTDIR/" \
 	-x include/ \
 	-x share/fwupd/device-tests/ \
 	-x share/tests/ \
@@ -145,22 +146,22 @@ find $DESTDIR | \
 	--directory-ref INSTALLDIR \
 	--var "var.DESTDIR" \
 	--component-group "CG.fwupd-files" | \
-	tee $build/contrib/fwupd-files.wxs
+	tee "$build/contrib/fwupd-files.wxs"
 
 MSI_FILENAME="$DESTDIR/setup/fwupd-$VERSION-setup-x86_64.msi"
-mkdir -p $DESTDIR/setup
+mkdir -p "$DESTDIR/setup"
 wixl -v \
-	$build/contrib/fwupd.wxs \
-	$build/contrib/fwupd-deps.wxs \
-	$build/contrib/fwupd-certs.wxs \
-	$build/contrib/fwupd-files.wxs \
+	"$build/contrib/fwupd.wxs" \
+	"$build/contrib/fwupd-deps.wxs" \
+	"$build/contrib/fwupd-certs.wxs" \
+	"$build/contrib/fwupd-files.wxs" \
 	-D CRTDIR=$CERTDIR \
 	-D MINGW32BINDIR=$MINGW32BINDIR \
-	-D DESTDIR=$DESTDIR \
-	-o ${MSI_FILENAME}
+	-D DESTDIR="$DESTDIR" \
+	-o "${MSI_FILENAME}"
 
 # check the msi archive can be installed and removed (use "wine uninstaller" to do manually)
-wine msiexec /i ${MSI_FILENAME}
+wine msiexec /i "${MSI_FILENAME}"
 tree ~/.wine/drive_c/Program\ Files/fwupd/
-wine ~/.wine/drive_c/Program\ Files/fwupd/bin/fwupdtool get-plugins
-wine msiexec /x ${MSI_FILENAME}
+wine ~/.wine/drive_c/Program\ Files/fwupd/bin/fwupdtool get-plugins --json
+wine msiexec /x "${MSI_FILENAME}"
