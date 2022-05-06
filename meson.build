@@ -520,6 +520,16 @@ motd_dir = 'motd.d'
 conf.set_quoted('MOTD_FILE', motd_file)
 conf.set_quoted('MOTD_DIR', motd_dir)
 
+if host_machine.system() == 'windows'
+  if host_machine.cpu_family() == 'i686'
+    conf.set_quoted('WIXL_ARCH', 'x86')
+  elif host_machine.cpu() == 'x86_64'
+    conf.set_quoted('WIXL_ARCH', 'x64')
+  elif host_machine.cpu() == 'aarch64'
+    conf.set_quoted('WIXL_ARCH', 'arm64')
+  endif
+endif
+
 configure_file(
   output : 'config.h',
   configuration : conf
@@ -563,14 +573,4 @@ subdir('docs')
 
 if build_daemon and libsystemd.found()
   meson.add_install_script('meson_post_install.sh', systemdunitdir)
-endif
-
-makensis = find_program('makensis', required : host_machine.system() == 'windows')
-if makensis.found()
-  run_target(
-    'makensis',
-    command: [
-      makensis,
-      join_paths(meson.project_source_root(), 'contrib', 'setup-win32.nsi'),
-  ])
 endif

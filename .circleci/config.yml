@@ -34,7 +34,8 @@ jobs:
                                   gcab
                                   ca-certificates
                                   python3-pip
-                                  mingw32-nsis
+                                  tree
+                                  https://kojipkgs.fedoraproject.org//work/tasks/3617/86733617/msitools-0.101.32-4.fc36.x86_64.rpm
                                   mingw64-brotli
                                   mingw64-gcc
                                   mingw64-gettext
@@ -54,7 +55,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - "dist/setup/*.exe"
+            - "dist/setup/*.msi"
             - "dist/VERSION"
             - "dist/news.txt"
       - store_artifacts:
