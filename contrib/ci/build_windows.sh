@@ -148,7 +148,7 @@ find $DESTDIR | \
 	tee $build/contrib/fwupd-files.wxs
 
 MSI_FILENAME="$DESTDIR/setup/fwupd-$VERSION-setup-x86_64.msi"
-mkdir -p setup
+mkdir -p $DESTDIR/setup
 wixl -v \
 	$build/contrib/fwupd.wxs \
 	$build/contrib/fwupd-deps.wxs \
