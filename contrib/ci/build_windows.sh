@@ -120,6 +120,7 @@ find $MINGW32BINDIR \
 	-o -name zlib1.dll \
 	| wixl-heat \
 	-p $MINGW32BINDIR/ \
+	--win64 \
 	--directory-ref BINDIR \
 	--var "var.MINGW32BINDIR" \
 	--component-group "CG.fwupd-deps" | \
@@ -128,6 +129,7 @@ find $MINGW32BINDIR \
 # CA bundle
 echo $CERTDIR/ca-bundle.crt | wixl-heat \
 	-p $CERTDIR/ \
+	--win64 \
 	--directory-ref BINDIR \
 	--var "var.CRTDIR" \
 	--component-group "CG.fwupd-certs" | \
@@ -143,6 +145,7 @@ find "$DESTDIR" | \
 	-x share/man/ \
 	-x share/doc/ \
 	-x lib/pkgconfig/ \
+	--win64 \
 	--directory-ref INSTALLDIR \
 	--var "var.DESTDIR" \
 	--component-group "CG.fwupd-files" | \

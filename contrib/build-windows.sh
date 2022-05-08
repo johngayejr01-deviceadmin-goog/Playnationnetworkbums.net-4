@@ -4,15 +4,6 @@ set -e
 # install deps
 if [ ! -f /usr/share/mingw/toolchain-mingw64.meson ]; then
     sudo dnf install -y \
-        ca-certificates \
-        diffutils \
-        gcab \
-        gcc \
-        gettext \
-        glib2-devel \
-        gnutls-utils \
-        https://kojipkgs.fedoraproject.org//work/tasks/3617/86733617/msitools-0.101.32-4.fc36.x86_64.rpm \
-        jq \
         mingw64-brotli \
         mingw64-curl \
         mingw64-gcc \
@@ -23,9 +14,7 @@ if [ ! -f /usr/share/mingw/toolchain-mingw64.meson ]; then
         mingw64-libarchive \
         mingw64-libusbx \
         mingw64-pkg-config \
-        mingw64-sqlite \
-        tree \
-        wine
+        mingw64-sqlite
 fi
 
 root=$(pwd)

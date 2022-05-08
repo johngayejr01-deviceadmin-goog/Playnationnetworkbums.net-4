@@ -4,12 +4,10 @@
   <?define Version = @VERSION@?>
   <?define Arch = @WIXL_ARCH@?>
   <?if $(var.Arch) = "x64"?>
-      <?define GLIB_ARCH = "win64"?>
       <?define ArchString = "64-bit"?>
       <?define ArchProgramFilesFolder = "ProgramFiles64Folder"?>
       <?define Win64 = "yes"?>
   <?else?>
-      <?define GLIB_ARCH = "win32"?>
       <?define ArchString = "32-bit"?>
       <?define ArchProgramFilesFolder = "ProgramFilesFolder"?>
       <?define Win64 = "no"?>
@@ -23,7 +21,7 @@
            UpgradeCode="$(var.UpgradeCode)"
            Language="1033">
 
-    <Package InstallerVersion="200" Compressed="yes" Comments="comments" InstallScope="perMachine"/>
+    <Package InstallerVersion="200" Compressed="yes" Comments="comments" InstallScope="perMachine" Platform="$(var.Arch)"/>
     <Media Id="1" Cabinet="cabinet.cab" EmbedCab="yes"/>
 
     <Property Id="ARPHELPLINK" Value="https://github.com/fwupd/fwupd"/>
