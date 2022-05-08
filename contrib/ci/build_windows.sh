@@ -65,7 +65,7 @@ export WINEPATH="/usr/x86_64-w64-mingw32/sys-root/mingw/bin/;$build/libfwupd/;$b
 ninja -C "$build" -v
 ninja -C "$build" test
 
-# switch to release optimisations
+# switch to release optimizations
 meson configure -Dtests=false -Dbuildtype=release
 ninja -C "$build" -v install
 
@@ -160,6 +160,7 @@ wixl -v \
 	"$build/contrib/fwupd-files.wxs" \
 	-D CRTDIR=$CERTDIR \
 	-D MINGW32BINDIR=$MINGW32BINDIR \
+	-D Win64="yes" \
 	-D DESTDIR="$DESTDIR" \
 	-o "${MSI_FILENAME}"
 
